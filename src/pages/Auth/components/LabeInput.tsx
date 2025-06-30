@@ -39,7 +39,10 @@ const LabelInput: React.FC<props> = ({ label, type, placeholder, name }) => {
           className="w-full  p-3 rounded-lg border border-gray-300 focus:border-2 focus:right-2 focus:border-blue-400 transition-colors duration-200    outline-none"
         />
 
-        <button className="absolute top-1/4 right-3 text-gray-500  ">
+        <button
+          type="button"
+          className="absolute top-1/4 right-3 text-gray-500  "
+        >
           {isPassword && eyeIcon}
         </button>
       </div>

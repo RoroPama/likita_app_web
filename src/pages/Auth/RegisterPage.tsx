@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import ConnexionButton from "./components/ConnexionButton";
 import LabelInput from "./components/LabeInput";
 import LoginRegisterLabel from "./components/LoginRegisterLabel";
@@ -9,32 +11,43 @@ type RegisterPageProps = {
 };
 
 const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
-  const [error, setError] = useState<string>("");
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [errorInfo, setErrorInfo] = useState<string>("");
+  const { register, error, isLoading, clearError } = useAuth();
+  const navigate = useNavigate();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(""); // Reset error message
+    setErrorInfo("");
+    clearError();
 
     const formData = new FormData(event.currentTarget);
     const username = (formData.get("username") ?? "").toString().trim();
     const email = (formData.get("email") ?? "").toString().trim();
-    const password = formData.get("password");
-    const confirmPassword = formData.get("confirm_password");
+    const password = formData.get("password")?.toString();
+    const confirmPassword = formData.get("confirm_password")?.toString();
 
     if (!username || !email || !password || !confirmPassword) {
-      setError("Veuillez remplir tous les champs obligatoires");
+      setErrorInfo("Veuillez remplir tous les champs obligatoires");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Les mots de passe saisis ne correspondent pas");
+      setErrorInfo("Les mots de passe saisis ne correspondent pas");
       return;
     }
 
-    alert(
-      `Email: ${email}, Password: ${password} Username: ${username}, Confirm Password: ${confirmPassword}`
-    );
+    const result = await register({ username, email, password });
+
+    if (!result.success) {
+      console.log("Erreur d'inscription:", result.message);
+    } else {
+      console.log("Inscription réussie:", result.data);
+      navigate("/home");
+    }
+
+    return result;
   };
+
+  const displayError = errorInfo || error;
 
   return (
     <form
@@ -57,9 +70,8 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
           name="confirm_password"
         />
       </div>
-
       <div className="flex flex-col gap-6">
-        {error && (
+        {displayError && (
           <div className="bg-red-50 border-l-4 border-red-400 text-red-800 px-4 py-3 rounded-r shadow-sm animate-pulse">
             <div className="flex items-center gap-3">
               <svg
@@ -75,12 +87,15 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
                   d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
                 />
               </svg>
-              <p className="text-sm font-medium">{error}</p>
+              <p className="text-sm font-medium">{displayError}</p>
             </div>
           </div>
         )}
-
-        <ConnexionButton label="S'inscrire" Action={() => {}} />
+        <ConnexionButton
+          label={isLoading ? "Inscription..." : "S'inscrire"}
+          Action={() => {}}
+          disabled={isLoading}
+        />
         <div className="flex flex-row items-center justify-center gap-1">
           <TextButton
             label="Mot de passe oublié ?"
