@@ -1,9 +1,11 @@
-import NavBar from "./components/NavBar";
+import Header from "./components/Header";
+import Main from "./components/Main";
 
 export default function HomePage() {
   return (
     <div>
-      <NavBar />
+      <Header />
+      <Main />
     </div>
   );
 }

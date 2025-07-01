@@ -3,9 +3,9 @@ import ProfileIcon from "./ProfileIcon";
 import SearchBar from "./SearchBar";
 import SearchIconButton from "./SearchIconButton";
 
-const NavBar = () => {
+const Header = () => {
   return (
-    <nav className="fix w-screen h-20 shadow-lg flex items-center justify-between px-4 sm:px-8 lg:px-16 bg-white">
+    <nav className="fix w-screen h-20 shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16 bg-white">
       <div className="flex items-center gap-3 sm:gap-5">
         <h1 className="text-2xl sm:text-4xl font-black tracking-tighter bg-gradient-blue-90 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
           Likita
@@ -30,4 +30,4 @@ const NavBar = () => {
   );
 };
 
-export default NavBar;
+export default Header;
