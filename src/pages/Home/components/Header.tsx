@@ -10,7 +10,7 @@ const Header = () => {
         <h1 className="text-2xl sm:text-4xl font-black tracking-tighter bg-gradient-blue-90 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
           Likita
         </h1>
-        <div className="hidden sm:hidden   lg:block text-gray-600 text-xs sm:text-sm py-1 px-3 bg-gradient-to-r from-slate-100 to-slate-200 border rounded-full font-semibold whitespace-nowrap">
+        <div className="hidden sm:hidden   lg:block text-gray-600 lg:text-xs py-1 px-3 bg-gradient-to-r from-slate-100 to-slate-200 border rounded-full font-semibold whitespace-nowrap">
           Événements exceptionnelss
         </div>
       </div>
