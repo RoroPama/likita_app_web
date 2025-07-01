@@ -44,7 +44,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ action }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full sm:w-1/2 rounded-r-xl flex flex-col justify-center gap-4 sm:gap-8 px-5 sm:px-6 py-3"
+      className="w-full sm:w-1/2 rounded-r-xl flex flex-col justify-center gap-4 sm:gap-8 px-5 sm:px-6 py-3 overflow-y-auto"
     >
       <LoginRegisterLabel>Connectez-vous à Likita</LoginRegisterLabel>
       <div className="sm:w-full flex flex-col gap-4 sm:gap-8">

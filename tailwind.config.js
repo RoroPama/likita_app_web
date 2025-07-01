@@ -18,6 +18,8 @@ export default {
 
         "gradient-blue-135":
           "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
+        "gradient-blue-180":
+          "linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%)",
 
         "gradient-blue-90":
           "linear-gradient(90deg, #3b82f6 0%,#3b82f6 30%, #1d4ed8 100%)",

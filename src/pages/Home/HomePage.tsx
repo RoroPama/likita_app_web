@@ -1,3 +1,9 @@
+import NavBar from "./components/NavBar";
+
 export default function HomePage() {
-  return <div>coucou</div>;
+  return (
+    <div>
+      <NavBar />
+    </div>
+  );
 }
