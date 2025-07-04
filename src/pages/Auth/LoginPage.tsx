@@ -13,7 +13,7 @@ type LoginPageProps = {
 
 const LoginPage: React.FC<LoginPageProps> = ({ action }) => {
   const [errorInfo, setErrorInfo] = useState<string>("");
-  const { login, isLoading, error, clearError } = useAuth();
+  const { login, isLoading, error, clearError, isSuccess } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,19 +32,19 @@ const LoginPage: React.FC<LoginPageProps> = ({ action }) => {
 
     const result = await login({ email, password });
 
-    if (!result.success) {
+    if (!isSuccess) {
       setErrorInfo(result.message);
     } else {
       navigate("/home");
     }
   };
 
-  const displayError = errorInfo || error;
+  const displayError = errorInfo || error?.message;
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full sm:w-1/2 rounded-r-xl flex flex-col justify-center gap-4 sm:gap-8 px-5 sm:px-6 py-3 overflow-y-auto"
+      className="w-full sm:w-1/2 rounded-r-xl flex flex-col justify-center gap-4 sm:gap-8 px-5 sm:px-6 py-3 "
     >
       <LoginRegisterLabel>Connectez-vous à Likita</LoginRegisterLabel>
       <div className="sm:w-full flex flex-col gap-4 sm:gap-8">

@@ -1,31 +1,23 @@
-import { useState } from "react";
+import type { User } from "../types/user";
 import constants from "../utils/constants";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useAuth = () => {
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isSuccess, setSuccess] = useState(false);
-  const [isChecked, setChecked] = useState(false);
+  const queryClient = useQueryClient();
 
-  const register = async (userData: {
-    username: string;
-    email: string;
-    password: string;
-  }) => {
-    try {
-      setLoading(true);
-      setError(null);
-      setSuccess(false);
-
+  const registerMutation = useMutation({
+    mutationFn: async (userData: {
+      username: string;
+      email: string;
+      password: string;
+    }) => {
       if (!userData.username || !userData.email || !userData.password) {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
-
       if (userData.password.length < 8) {
         throw new Error("Le mot de passe doit contenir au moins 8 caractères");
       }
 
-      console.log(userData);
       const response = await fetch(`${constants.API_BASE_URL}/users`, {
         method: "POST",
         credentials: "include",
@@ -35,47 +27,34 @@ export const useAuth = () => {
         body: JSON.stringify(userData),
       });
 
-      console.log(response);
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(
           errorData.message || "Une erreur s'est produite lors de l'inscription"
         );
       }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      if (data.data) {
+        const userData: User = {
+          id: data.data._id || data.data.id,
+          username: data.data.username,
+          email: data.data.email,
+        };
+        queryClient.setQueryData<User | null>(["user"], userData);
+      }
+    },
+    onError: (error) => {
+      console.error("Erreur lors de l'inscription:", error.message);
+    },
+  });
 
-      const data = await response.json();
-      setSuccess(true);
-
-      return {
-        success: true,
-        data: data,
-        message: "Inscription réussie",
-      };
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Une erreur s'est produite";
-      setError(errorMessage); // Important : bien définir l'erreur dans le state
-
-      return {
-        success: false,
-        message: errorMessage,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async (userData: { email: string; password: string }) => {
-    try {
-      setLoading(true);
-      setError(null);
-      setSuccess(false);
-
+  const loginMutation = useMutation({
+    mutationFn: async (userData: { email: string; password: string }) => {
       if (!userData.email || !userData.password) {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
-
       if (userData.password.length < 8) {
         throw new Error("Le mot de passe doit contenir au moins 8 caractères");
       }
@@ -95,81 +74,110 @@ export const useAuth = () => {
           errorData.message || "Une erreur s'est produite lors de la connexion"
         );
       }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      const user: User | undefined = data.data?.user;
+      if (user) {
+        const userData: User = {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        };
 
-      const data = await response.json();
-      setSuccess(true);
+        queryClient.setQueryData<User | null>(["user"], userData);
+      }
+    },
+    onError: (error) => {
+      console.error("Erreur lors de la connexion:", error.message);
+    },
+  });
 
-      return {
-        success: true,
-        data: data,
-        message: "Connexion réussie",
-      };
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Une erreur s'est produite";
-      setError(errorMessage); // Important : bien définir l'erreur dans le state
+  const {
+    data: user,
+    isLoading: isAuthLoading,
+    isError: isAuthError,
+    error: authError,
+    isSuccess: isAuthSuccess,
+    isFetching: isAuthFetching,
+  } = useQuery<User | null>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const response = await fetch(
+          `${constants.API_BASE_URL}/auth/checkAuth`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
 
-      return {
-        success: false,
-        message: errorMessage,
-      };
-    } finally {
-      setLoading(false);
-    }
+        if (!response.ok) {
+          queryClient.setQueryData(["user"], null);
+          return null;
+        }
+
+        const jsonDecoded = await response.json();
+
+        if (jsonDecoded.data?.user) {
+          const userData: User = {
+            id: jsonDecoded.data.user.id,
+            username: jsonDecoded.data.user.username,
+            email: jsonDecoded.data.user.email,
+          };
+          return userData;
+        }
+
+        return null;
+      } catch (error) {
+        queryClient.setQueryData(["user"], null);
+        throw error;
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  const logout = () => {
+    queryClient.setQueryData(["user"], null);
+    queryClient.removeQueries({ queryKey: ["user"] });
   };
 
+  const isLoading =
+    registerMutation.isPending ||
+    loginMutation.isPending ||
+    isAuthLoading ||
+    isAuthFetching;
+  const error = registerMutation.error || loginMutation.error || authError;
+  const isSuccess =
+    registerMutation.isSuccess || loginMutation.isSuccess || isAuthSuccess;
+
   const clearError = () => {
-    setError(null);
+    registerMutation.reset();
+    loginMutation.reset();
   };
 
   const clearSuccess = () => {
-    setSuccess(false);
-  };
-
-  const checkIfAuthenticated = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${constants.API_BASE_URL}/auth/checkAuth`, {
-        method: "GET",
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setSuccess(true);
-
-        console.log("isSuccess", isSuccess);
-
-        return {
-          success: true,
-          data: data,
-          message: "Utilisateur authentifié",
-        };
-      }
-
-      setSuccess(false);
-    } catch (error) {
-      setSuccess(false);
-      setError(
-        error instanceof Error ? error.message : "Une erreur s'est produite"
-      );
-    } finally {
-      setChecked(true);
-      setLoading(false);
-    }
+    registerMutation.reset();
+    loginMutation.reset();
   };
 
   return {
-    isChecked,
+    user,
     isLoading,
     error,
     isSuccess,
-    register,
+
+    register: registerMutation.mutateAsync,
+    login: loginMutation.mutateAsync,
+    logout,
+
+    isAuthenticated: !!user,
+    isAuthenticating: isAuthLoading || isAuthFetching,
+    authCheckError: isAuthError,
+    authChecked: !isAuthFetching && !isAuthLoading,
     clearError,
     clearSuccess,
-    checkIfAuthenticated,
-    login,
   };
 };

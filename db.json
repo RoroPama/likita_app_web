@@ -1,0 +1,206 @@
+{
+  "events": [
+    {
+      "id": "1",
+      "type": "Tech",
+      "organizer": {
+        "name": "TechConf Paris",
+        "avatar": "TC",
+        "publishedTime": "il y a 2h"
+      },
+      "status": "coming",
+      "image": {
+        "url": "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+        "title": "Conférence Tech"
+      },
+      "title": "Conférence Innovation & IA 2025",
+      "details": {
+        "date": "15 Mars 2025",
+        "location": "En ligne",
+        "platform": "Zoom",
+        "price": "Gratuit"
+      },
+      "description": "Rejoignez-nous pour une journée exceptionnelle dédiée aux dernières innovations en intelligence artificielle. Conférences, ateliers pratiques et networking avec les leaders du secteur tech.",
+      "stats": {
+        "likes": 124,
+        "comments": 18,
+        "views": 1250
+      },
+      "registrationUrl": "https://techconf-paris.com/register/ai-2025",
+      "isLiked": false,
+      "isSaved": false
+    },
+    {
+      "id": "2",
+      "type": "Tech",
+      "organizer": {
+        "name": "DevFest 2025",
+        "avatar": "DF",
+        "publishedTime": "il y a 7h"
+      },
+      "status": "live",
+      "image": {
+        "url": "https://images.unsplash.com/photo-1511974038490-b89005383f2f?crop=entropy&cs=tinysrgb&fit=max&ixid=MXwyMDg1NzN8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA&ixlib=rb-1.2.1&q=80&w=1080",
+        "title": "DevFest"
+      },
+      "title": "DevFest 2025 - La conférence des développeurs",
+      "details": {
+        "date": "20 Juin 2025",
+        "location": "Hybride (Lyon + En ligne)",
+        "platform": "YouTube Live",
+        "price": "49€"
+      },
+      "description": "Un événement incontournable pour les développeurs avec des ateliers pratiques et des conférences. Participez en présentiel à Lyon ou suivez en direct depuis chez vous.",
+      "stats": {
+        "likes": 231,
+        "comments": 42,
+        "views": 3420
+      },
+      "registrationUrl": "https://devfest2025.com/tickets",
+      "isLiked": true,
+      "isSaved": false
+    }
+  ],
+  "comments": [
+    {
+      "id": "c1",
+      "eventId": "1",
+      "user": {
+        "name": "Jean Dupont",
+        "avatar": "JD"
+      },
+      "time": "il y a 30 min",
+      "text": "Super événement, merci pour le partage ! 🎉",
+      "createdAt": "2025-07-02T08:30:00.000Z"
+    },
+    {
+      "id": "c2",
+      "eventId": "1",
+      "user": {
+        "name": "Sophie Martin",
+        "avatar": "SM"
+      },
+      "time": "il y a 1h",
+      "text": "J'ai ajouté cet événement à mes favoris. 😊",
+      "createdAt": "2025-07-02T08:00:00.000Z"
+    },
+    {
+      "id": "c3",
+      "eventId": "1",
+      "user": {
+        "name": "Alex Lee",
+        "avatar": "AL"
+      },
+      "time": "il y a 2h",
+      "text": "Le sujet est vraiment pertinent. Je vais le partager avec mes collègues !",
+      "createdAt": "2025-07-02T07:00:00.000Z"
+    },
+    {
+      "id": "c4",
+      "eventId": "2",
+      "user": {
+        "name": "Marie Claire",
+        "avatar": "MC"
+      },
+      "time": "il y a 3h",
+      "text": "Excellente trouvaille sur cette plateforme ! ✨",
+      "createdAt": "2025-07-02T06:00:00.000Z"
+    },
+    {
+      "id": "c5",
+      "eventId": "2",
+      "user": {
+        "name": "Thomas Bernard",
+        "avatar": "TB"
+      }
+    },
+    {
+      "id": "aa03",
+      "eventId": "2",
+      "user": {
+        "name": "Utilisateur Actuel",
+        "avatar": "UA"
+      },
+      "time": "à l'instant",
+      "text": "coucou",
+      "createdAt": "2025-07-02T21:56:30.860Z"
+    },
+    {
+      "id": "13fe",
+      "eventId": "2",
+      "user": {
+        "name": "Utilisateur Actuel",
+        "avatar": "UA"
+      },
+      "time": "à l'instant",
+      "text": "bonjour",
+      "createdAt": "2025-07-02T21:56:43.629Z"
+    },
+    {
+      "id": "117e",
+      "eventId": "1",
+      "user": {
+        "name": "Utilisateur Actuel",
+        "avatar": "UA"
+      },
+      "time": "à l'instant",
+      "text": "coucou",
+      "createdAt": "2025-07-02T21:57:16.024Z"
+    },
+    {
+      "id": "e1a0",
+      "eventId": "1",
+      "user": {
+        "name": "Utilisateur Actuel",
+        "avatar": "UA"
+      },
+      "time": "à l'instant",
+      "text": "cc",
+      "createdAt": "2025-07-02T21:57:30.841Z"
+    },
+    {
+      "id": "d8a8",
+      "eventId": "6867c0f81dc814a98d6aec8e",
+      "user": {
+        "name": "Moi",
+        "avatar": "RP"
+      },
+      "time": "à l'instant",
+      "text": "coucou",
+      "createdAt": "2025-07-04T11:59:39.853Z"
+    },
+    {
+      "id": "8892",
+      "eventId": "6867c0f81dc814a98d6aec8e",
+      "user": {
+        "name": "Moi",
+        "avatar": "RP"
+      },
+      "time": "à l'instant",
+      "text": "Oui bonjour",
+      "createdAt": "2025-07-04T12:03:20.916Z"
+    },
+    {
+      "id": "120a",
+      "eventId": "6867c0f81dc814a98d6aec8e",
+      "user": {
+        "name": "Moi",
+        "avatar": "RP"
+      },
+      "time": "à l'instant",
+      "text": "🎉🎉",
+      "createdAt": "2025-07-04T12:03:30.358Z"
+    },
+    {
+      "id": "839e",
+      "eventId": "6867b296dbcb1466a8ac8a42",
+      "user": {
+        "name": "Moi",
+        "avatar": "RP"
+      },
+      "time": "à l'instant",
+      "text": "coucou",
+      "createdAt": "2025-07-04T13:52:49.938Z"
+    }
+  ]
+}

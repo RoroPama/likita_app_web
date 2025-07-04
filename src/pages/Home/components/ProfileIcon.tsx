@@ -1,4 +1,9 @@
+import { useAuth } from "../../../hooks/useAuth";
+import { AbregUserName } from "../../../utils/fonction";
+
 const ProfileIcon = () => {
+  const { user, isLoading } = useAuth();
+  console.log("dataProfile", user);
   return (
     <div
       className="text-sm px-2 py-1 sm:text-base sm:px-3 sm:py-2 lg:text-lg lg:px-4 lg:py-2
@@ -10,7 +15,7 @@ const ProfileIcon = () => {
     backdrop-blur-sm cursor-pointer select-none
     flex items-center justify-center min-w-[2.5rem] min-h-[2rem] sm:min-w-[3rem] sm:min-h-[2.5rem]"
     >
-      RP
+      {isLoading || !user?.username ? "  " : AbregUserName(user.username)}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import Loader from "../shared/Loader";
@@ -6,22 +6,17 @@ import Loader from "../shared/Loader";
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { checkIfAuthenticated, isLoading, isSuccess, isChecked } = useAuth();
+  const { isAuthenticated, isAuthenticating, authChecked, authCheckError } =
+    useAuth();
 
-  useEffect(() => {
-    const fetchAuth = async () => {
-      const result = await checkIfAuthenticated();
-      console.log(result);
-    };
-    fetchAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  console.log("isSucess", isSuccess);
-
-  if (isLoading || !isChecked) {
+  if (isAuthenticating || !authChecked) {
     return <Loader fullScreen />;
   }
-  return isSuccess ? <>{children}</> : <Navigate to={"/login"} replace />;
+
+  if (authCheckError || !isAuthenticated) {
+    return <Navigate to={"/login"} replace />;
+  }
+
+  return <>{children}</>;
 };
 export default PrivateRoute;

@@ -12,7 +12,7 @@ type RegisterPageProps = {
 
 const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
   const [errorInfo, setErrorInfo] = useState<string>("");
-  const { register, error, isLoading, clearError } = useAuth();
+  const { register, error, isLoading, clearError, isSuccess } = useAuth();
   const navigate = useNavigate();
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,7 +37,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
 
     const result = await register({ username, email, password });
 
-    if (!result.success) {
+    if (!isSuccess) {
       console.log("Erreur d'inscription:", result.message);
     } else {
       console.log("Inscription réussie:", result.data);
@@ -47,7 +47,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
     return result;
   };
 
-  const displayError = errorInfo || error;
+  const displayError = errorInfo || error?.message;
 
   return (
     <form
