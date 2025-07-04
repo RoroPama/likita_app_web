@@ -4,7 +4,6 @@ import EventCardHeader from "./EventCardHeader";
 import EventCardProfile from "./EventCardProfile";
 import EventComments from "./EventComments";
 import EventShareOptions from "./EventShareOptions";
-import { useComments } from "../../../../hooks/useComment";
 import { getTimeAgo } from "../../../../utils/fonction";
 import LikeEventButton from "./LikeEventButton";
 
@@ -26,8 +25,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const [isSaved, setIsSaved] = useState(event.isSaved || false);
   const [commentsIsOpen, setCommentsIsOpen] = useState(false);
 
-  const { data: comments = [] } = useComments(event.id, commentsIsOpen);
-  const commentsCount = comments.length;
+  const commentsCount = event.stats?.comments;
 
   const handleSave = useCallback(() => {
     const newSavedState = !isSaved;
@@ -175,7 +173,7 @@ const EventCard: React.FC<EventCardProps> = ({
             rel="noopener noreferrer"
             className="flex-1 py-3 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-center rounded-xl font-semibold text-sm hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-[1.02] shadow-md hover:shadow-lg"
           >
-            Accéder à l'événement 🚀
+            Accéder à l'événement
           </a>
         </div>
       </div>

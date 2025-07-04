@@ -7,7 +7,7 @@ export const useComments = (eventId: string, enabled: boolean = true) => {
     queryKey: ["comments", eventId],
     queryFn: () => commentsApi.getCommentsByEventId(eventId),
     enabled,
-    staleTime: 30000,
+    staleTime: 3,
     refetchOnWindowFocus: true,
   });
 };

@@ -16,7 +16,6 @@ export interface Event {
   stats?: {
     likes: number;
     comments: number;
-    views: number;
   };
   liveUrl: string;
   isLiked?: boolean;

@@ -1,18 +1,23 @@
 import type { CommentModel } from "../types/comment_model";
+import constants from "../utils/constants";
 
+const eventUrl = `${constants.API_BASE_URL}/events`;
 const getCommentsByEventId = async (
   eventId: string
 ): Promise<CommentModel[]> => {
   try {
-    const response = await fetch(
-      `http://localhost:3001/comments?eventId=${eventId}&_sort=createdAt&_order=desc`
-    );
+    const response = await fetch(`${eventUrl}/${eventId}/comments`, {
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("Erreur lors du chargement des commentaires");
     }
+    const jsonDecoded = await response.json();
 
-    const comments: CommentModel[] = await response.json();
+    console.log(jsonDecoded);
+    const comments: CommentModel[] = jsonDecoded.comments;
+
     return comments;
   } catch (e) {
     console.error("Erreur dans getCommentsByEventId :", e);
@@ -28,30 +33,21 @@ const addComment = async ({
   commentText: string;
 }): Promise<CommentModel> => {
   try {
-    const newComment = {
-      eventId,
-      user: {
-        name: "Moi",
-        avatar: "RP",
-      },
-      time: "à l'instant",
-      text: commentText,
-      createdAt: new Date().toISOString(),
-    };
-
-    const response = await fetch(`http://localhost:3001/comments`, {
+    const response = await fetch(`${eventUrl}/${eventId}/comments`, {
       method: "POST",
+      credentials: "include",
+
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newComment),
+      body: JSON.stringify({ text: commentText }),
     });
 
     if (!response.ok) {
       throw new Error("Erreur lors de l'ajout du commentaire");
     }
-
-    const addedComment: CommentModel = await response.json();
+    const jsonDecoded = await response.json();
+    const addedComment: CommentModel = jsonDecoded.comment;
     return addedComment;
   } catch (e) {
     console.error("Erreur dans addComment :", e);
@@ -61,12 +57,10 @@ const addComment = async ({
 
 const deleteComment = async (commentId: string): Promise<void> => {
   try {
-    const response = await fetch(
-      `http://localhost:3001/comments/${commentId}`,
-      {
-        method: "DELETE",
-      }
-    );
+    const response = await fetch(`${eventUrl}/comments/${commentId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
 
     if (!response.ok) {
       throw new Error("Erreur lors de la suppression du commentaire");
