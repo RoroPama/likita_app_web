@@ -45,6 +45,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
   });
 
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [formError, setFormError] = useState<string | null>(null);
 
   const categories = [
     "Technologie",
@@ -66,6 +67,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     >
   ) => {
     const { name, value } = e.target;
+    setFormError(null);
     if (["date", "platform"].includes(name)) {
       setFormData((prev) => ({
         ...prev,
@@ -86,7 +88,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) {
-        alert("L'image ne doit pas dépasser 10MB");
+        setFormError("L'image ne doit pas dépasser 10MB.");
         return;
       }
 
@@ -105,6 +107,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
         }));
 
         setImagePreview(base64String);
+        setFormError(null);
       };
       reader.readAsDataURL(file);
     }
@@ -120,7 +123,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
       !formData.imageUrl ||
       !formData.details.platform
     ) {
-      alert("Veuillez remplir tous les champs obligatoires.");
+      setFormError("Veuillez remplir tous les champs obligatoires.");
       return;
     }
 
@@ -172,16 +175,6 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
           <div className="space-y-6">
-            {error && (
-              <div
-                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                <strong className="font-bold">Erreur: </strong>
-                <span className="block sm:inline">{error}</span>
-              </div>
-            )}
-
             <div>
               <label
                 htmlFor="title"
@@ -354,6 +347,16 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 </label>
               </div>
             </div>
+
+            {(error || formError) && (
+              <div
+                className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+              >
+                <strong className="font-bold">Erreur: </strong>
+                <span className="block sm:inline">{error || formError}</span>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <button

@@ -3,6 +3,7 @@ import NavIconButton from "./NavIconButton";
 import ProfileIcon from "./ProfileIcon";
 import SearchBar from "./SearchBar";
 import SearchIconButton from "./SearchIconButton";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -20,6 +21,8 @@ const Header = ({ onSearch }: HeaderProps) => {
       setIsMobileSearchActive(false);
     }, 150);
   };
+
+  const navigate = useNavigate();
 
   return (
     <nav className="z-10 fixed w-full h-20 shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16 bg-white overflow-hidden">
@@ -67,10 +70,20 @@ const Header = ({ onSearch }: HeaderProps) => {
               : "opacity-100 translate-x-0"
           }`}
         >
-          <NavIconButton action={() => {}} isVisible={!isMobileSearchActive}>
+          <NavIconButton
+            action={() => {
+              navigate("/notification");
+            }}
+            isVisible={!isMobileSearchActive}
+          >
             🔔
           </NavIconButton>
-          <NavIconButton action={() => {}} isVisible={!isMobileSearchActive}>
+          <NavIconButton
+            action={() => {
+              alert("Page pas encore implémentée");
+            }}
+            isVisible={!isMobileSearchActive}
+          >
             💬
           </NavIconButton>
           <NavIconButton action={() => {}} isVisible={!isMobileSearchActive}>

@@ -8,11 +8,13 @@ import Loader from "../../../../components/shared/Loader";
 interface ListEventCardProps {
   searchQuery: string;
   selectedCategory: string;
+  openModal: () => void;
 }
 
 const ListEventCard = ({
   searchQuery,
   selectedCategory,
+  openModal,
 }: ListEventCardProps) => {
   const {
     data: events,
@@ -57,7 +59,14 @@ const ListEventCard = ({
       message = `Aucun événement trouvé dans la catégorie "${selectedCategory}"`;
     }
 
-    return <EmptyState description={message} onCreateEvent={() => {}} />;
+    return (
+      <EmptyState
+        description={message}
+        onCreateEvent={() => {
+          openModal();
+        }}
+      />
+    );
   }
 
   return (

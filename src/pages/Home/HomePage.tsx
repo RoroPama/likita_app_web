@@ -49,7 +49,7 @@ export default function HomePage() {
   return (
     <div className="w-full bg-gray-50 m-0">
       <Header onSearch={handleSearch} />
-      <Main searchQuery={searchQuery} />
+      <Main openModal={openModal} searchQuery={searchQuery} />
       <FloatButton onClick={openModal} />
       <CreateEventModal
         isOpen={isModalOpen}

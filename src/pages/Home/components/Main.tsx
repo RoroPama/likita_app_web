@@ -4,9 +4,10 @@ import FeedHeader from "./FeedHeader";
 
 interface MainProps {
   searchQuery: string;
+  openModal: () => void;
 }
 
-const Main = ({ searchQuery }: MainProps) => {
+const Main = ({ searchQuery, openModal }: MainProps) => {
   const [selectedCategory, setSelectedCategory] = useState("Tous");
 
   return (
@@ -15,7 +16,11 @@ const Main = ({ searchQuery }: MainProps) => {
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
       />
-      <Feed searchQuery={searchQuery} selectedCategory={selectedCategory} />
+      <Feed
+        openModal={openModal}
+        searchQuery={searchQuery}
+        selectedCategory={selectedCategory}
+      />
     </main>
   );
 };
