@@ -8,6 +8,8 @@ import type { CreateEventPayload } from "../../types/event";
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const createEventMutation = useCreateEvent();
 
   const handleCreateEvent = (
@@ -37,13 +39,17 @@ export default function HomePage() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    createEventMutation.reset(); // Réinitialise l'état de la mutation lors de la fermeture
+    createEventMutation.reset();
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
   };
 
   return (
     <div className="w-full bg-gray-50 m-0">
-      <Header />
-      <Main />
+      <Header onSearch={handleSearch} />
+      <Main searchQuery={searchQuery} />
       <FloatButton onClick={openModal} />
       <CreateEventModal
         isOpen={isModalOpen}

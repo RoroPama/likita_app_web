@@ -5,7 +5,11 @@ import EmptyState from "../../../../components/shared/EmptyState";
 import ErrorState from "../../../../components/shared/ErrorState";
 import Loader from "../../../../components/shared/Loader";
 
-const ListEventCard = () => {
+interface ListEventCardProps {
+  searchQuery: string;
+}
+
+const ListEventCard = ({ searchQuery }: ListEventCardProps) => {
   const {
     data: events,
     isLoading,
@@ -14,29 +18,34 @@ const ListEventCard = () => {
   } = useQuery({
     queryKey: ["events"],
     queryFn: eventApi.getAllEventWithUsers,
+    staleTime: 5 * 60 * 1000,
   });
 
+  const filteredEvents = events?.filter((event) =>
+    event.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   console.log("data", events);
-
+  console.log("filteredData", filteredEvents);
   if (isLoading) return <Loader />;
-
   if (error) {
     return <ErrorState message={error.message} onRetry={refetch} />;
   }
-
-  if (!events?.length) {
-    return <EmptyState onCreateEvent={() => {}} />;
+  if (!filteredEvents?.length) {
+    const message = searchQuery
+      ? `Aucun événement trouvé pour "${searchQuery}"`
+      : "Aucun événement disponible pour le moment.";
+    return <EmptyState description={message} onCreateEvent={() => {}} />;
   }
 
   return (
     <ul className="my-10 ">
-      {events.map((event, i) => (
-        <li key={event.id || i}>
+      {filteredEvents.map((event) => (
+        <li key={event.id}>
           <EventCard event={event} />
         </li>
       ))}
     </ul>
   );
 };
-
 export default ListEventCard;

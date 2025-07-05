@@ -28,7 +28,6 @@ const FloatButton: React.FC<Props> = ({ onClick }) => {
         safe-area-padding
       "
       style={{
-        // Ajout de padding pour les safe areas (iPhone avec encoche)
         paddingBottom: "env(safe-area-inset-bottom, 0px)",
         paddingRight: "env(safe-area-inset-right, 0px)",
       }}
@@ -36,7 +35,6 @@ const FloatButton: React.FC<Props> = ({ onClick }) => {
     >
       <Plus className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:rotate-90 duration-200" />
 
-      {/* Tooltip - masqué sur mobile, visible sur desktop */}
       <div
         className="
         absolute right-full mr-3 
