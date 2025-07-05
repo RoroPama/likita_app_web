@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Feed from "./Feed";
 import FeedHeader from "./FeedHeader";
 
@@ -6,11 +7,17 @@ interface MainProps {
 }
 
 const Main = ({ searchQuery }: MainProps) => {
+  const [selectedCategory, setSelectedCategory] = useState("Tous");
+
   return (
     <main className="w-full pt-20 flex flex-col items-center">
-      <FeedHeader />
-      <Feed searchQuery={searchQuery} />
+      <FeedHeader
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+      />
+      <Feed searchQuery={searchQuery} selectedCategory={selectedCategory} />
     </main>
   );
 };
+
 export default Main;

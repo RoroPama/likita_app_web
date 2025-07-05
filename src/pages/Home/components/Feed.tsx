@@ -1,12 +1,17 @@
 import ListEventCart from "./Event/ListEventCard";
+
 interface FeedCardProps {
-  searchQuery: string; // Add searchQuery prop
+  searchQuery: string;
+  selectedCategory: string;
 }
 
-const Feed = ({ searchQuery }: FeedCardProps) => {
+const Feed = ({ searchQuery, selectedCategory }: FeedCardProps) => {
   return (
     <div className="w-full">
-      <ListEventCart searchQuery={searchQuery} />
+      <ListEventCart
+        searchQuery={searchQuery}
+        selectedCategory={selectedCategory}
+      />
     </div>
   );
 };

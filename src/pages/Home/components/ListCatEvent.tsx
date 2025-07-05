@@ -1,19 +1,31 @@
-import { useState } from "react";
 import CatEventButton from "./CatEventButton";
 
-const ListCatEvent = () => {
-  const [catSelected, setCatSelected] = useState("Tous");
+interface ListCatEventProps {
+  selectedCategory: string;
+  onCategoryChange: (category: string) => void;
+}
 
-  const catList = ["Tous", "Tech", "Business", "Sport"];
+const ListCatEvent = ({
+  selectedCategory,
+  onCategoryChange,
+}: ListCatEventProps) => {
+  const catList = [
+    "Tous",
+    "Conférence",
+    "Technologie",
+    "Business",
+    "Éducation",
+    "Art & Culture",
+    "Autre",
+  ];
+
   return (
     <ul className="flex gap-3 flex-wrap">
       {catList.map((cat) => (
         <CatEventButton
           key={cat}
-          isActive={cat === catSelected}
-          action={(cat: string) => {
-            setCatSelected(cat);
-          }}
+          isActive={cat === selectedCategory}
+          action={onCategoryChange}
         >
           {cat}
         </CatEventButton>

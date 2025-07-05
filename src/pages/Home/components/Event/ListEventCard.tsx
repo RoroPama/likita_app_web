@@ -7,9 +7,13 @@ import Loader from "../../../../components/shared/Loader";
 
 interface ListEventCardProps {
   searchQuery: string;
+  selectedCategory: string;
 }
 
-const ListEventCard = ({ searchQuery }: ListEventCardProps) => {
+const ListEventCard = ({
+  searchQuery,
+  selectedCategory,
+}: ListEventCardProps) => {
   const {
     data: events,
     isLoading,
@@ -21,25 +25,43 @@ const ListEventCard = ({ searchQuery }: ListEventCardProps) => {
     staleTime: 5 * 60 * 1000,
   });
 
-  const filteredEvents = events?.filter((event) =>
-    event.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredEvents = events?.filter((event) => {
+    const matchesSearch = event.title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      selectedCategory === "Tous" || event.type === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
 
   console.log("data", events);
   console.log("filteredData", filteredEvents);
+  console.log("selectedCategory", selectedCategory);
+
   if (isLoading) return <Loader />;
+
   if (error) {
     return <ErrorState message={error.message} onRetry={refetch} />;
   }
+
   if (!filteredEvents?.length) {
-    const message = searchQuery
-      ? `Aucun événement trouvé pour "${searchQuery}"`
-      : "Aucun événement disponible pour le moment.";
+    let message = "Aucun événement disponible pour le moment.";
+
+    if (searchQuery && selectedCategory !== "Tous") {
+      message = `Aucun événement trouvé pour "${searchQuery}" dans la catégorie "${selectedCategory}"`;
+    } else if (searchQuery) {
+      message = `Aucun événement trouvé pour "${searchQuery}"`;
+    } else if (selectedCategory !== "Tous") {
+      message = `Aucun événement trouvé dans la catégorie "${selectedCategory}"`;
+    }
+
     return <EmptyState description={message} onCreateEvent={() => {}} />;
   }
 
   return (
-    <ul className="my-10 ">
+    <ul className="my-10">
       {filteredEvents.map((event) => (
         <li key={event.id}>
           <EventCard event={event} />
@@ -48,4 +70,5 @@ const ListEventCard = ({ searchQuery }: ListEventCardProps) => {
     </ul>
   );
 };
+
 export default ListEventCard;
