@@ -32,7 +32,7 @@ const getAllEventWithUsers = async (): Promise<Event[]> => {
     if (!response.ok) {
       const jsonDecoded = await response.json();
 
-      throw new Error(`Erreur HTTP: ${jsonDecoded}`);
+      throw new Error(`Erreur HTTP: ${jsonDecoded.message}  `);
     }
     const jsonDecoded = await response.json();
     const allEvents: Event[] = jsonDecoded.events;
