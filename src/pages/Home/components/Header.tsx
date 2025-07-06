@@ -72,7 +72,7 @@ const Header = ({ onSearch }: HeaderProps) => {
         >
           <NavIconButton
             action={() => {
-              navigate("/notification");
+              navigate("/home/notification");
             }}
             isVisible={!isMobileSearchActive}
           >
@@ -86,7 +86,12 @@ const Header = ({ onSearch }: HeaderProps) => {
           >
             💬
           </NavIconButton>
-          <NavIconButton action={() => {}} isVisible={!isMobileSearchActive}>
+          <NavIconButton
+            action={() => {
+              navigate("/home/enregistrement");
+            }}
+            isVisible={!isMobileSearchActive}
+          >
             🔖
           </NavIconButton>
           <div

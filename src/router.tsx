@@ -3,6 +3,7 @@ import HomePage from "./pages/Home/HomePage";
 import PrivateRoute from "./components/router/PrivateRoute";
 import AuthLayout from "./Layouts/AuthLayout";
 import NotificationPage from "./pages/Notifications/NotificationPage";
+import SavedEventsPage from "./pages/Save/SavedEventsPage";
 
 const AppRouter = () => {
   return (
@@ -10,7 +11,8 @@ const AppRouter = () => {
       <Routes>
         <Route path="/login" element={<AuthLayout />} />
         <Route path="/register" element={<AuthLayout />} />
-        <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/home/notification" element={<NotificationPage />} />
+        <Route path="/home/enregistrement" element={<SavedEventsPage />} />
 
         <Route
           path="/home"

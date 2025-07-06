@@ -13,7 +13,7 @@ type LoginPageProps = {
 
 const LoginPage: React.FC<LoginPageProps> = ({ action }) => {
   const [errorInfo, setErrorInfo] = useState<string>("");
-  const { login, isLoading, error, clearError, isSuccess } = useAuth();
+  const { login, isLoading, error, clearError } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -30,12 +30,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ action }) => {
       return;
     }
 
-    const result = await login({ email, password });
+    try {
+      await login({ email, password });
 
-    if (!isSuccess) {
-      setErrorInfo(result.message);
-    } else {
       navigate("/home");
+    } catch {
+      setErrorInfo("Une erreur s'est produite lors de la connexion");
     }
   };
 

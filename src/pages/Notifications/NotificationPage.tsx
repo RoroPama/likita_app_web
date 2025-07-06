@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowLeft, Info, Gift, Trash2 } from "lucide-react";
+import { ArrowLeft, Info, Gift, Trash2, Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface Notification {
@@ -44,9 +44,9 @@ const NotificationsPage = () => {
     );
   };
 
-  //   const markAllAsRead = () => {
-  //     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  //   };
+  // const markAllAsRead = () => {
+  //   setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  // };
 
   const deleteNotification = (id: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
@@ -88,7 +88,8 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+      {/* Header - Fond blanc, texte et icônes bleus */}
       <div className="sticky top-0 z-10 bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -109,15 +110,6 @@ const NotificationsPage = () => {
                 </span>
               )}
             </div>
-
-            {/* {unreadCount > 0 && (
-              <button
-                onClick={markAllAsRead}
-                className="text-sm text-blue-600 hover:text-blue-700 font-medium px-3 py-1 rounded-md hover:bg-blue-50 transition-colors"
-              >
-                Tout marquer lu
-              </button>
-            )} */}
           </div>
         </div>
       </div>
@@ -129,8 +121,8 @@ const NotificationsPage = () => {
               onClick={() => setSelectedFilter("all")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedFilter === "all"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:bg-gray-100"
+                  ? "bg-blue-100 text-blue-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100 bg-white border border-gray-300"
               }`}
             >
               Toutes ({notifications.length})
@@ -139,8 +131,8 @@ const NotificationsPage = () => {
               onClick={() => setSelectedFilter("unread")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedFilter === "unread"
-                  ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:bg-gray-100"
+                  ? "bg-blue-100 text-blue-700 shadow-sm"
+                  : "text-gray-600 hover:bg-gray-100 bg-white border border-gray-300"
               }`}
             >
               Non lues ({unreadCount})
@@ -150,8 +142,8 @@ const NotificationsPage = () => {
 
         <div className="space-y-4">
           {filteredNotifications.length === 0 ? (
-            <div className="text-center py-12">
-              <ArrowLeft className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+            <div className="text-center py-12 bg-white rounded-lg shadow-sm border border-gray-200">
+              <Bell className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 {selectedFilter === "unread"
                   ? "Aucune notification non lue"

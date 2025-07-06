@@ -3,6 +3,7 @@ import type { CommentModel } from "../../../../types/comment_model";
 import EventComment from "./EventComment";
 import AddComment from "./AddComment";
 import { useComments } from "../../../../hooks/useComment";
+import { useAuth } from "../../../../hooks/useAuth";
 
 interface EventCommentsProps {
   eventId: string;
@@ -16,6 +17,8 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
     isError,
     refetch,
   } = useComments(eventId);
+
+  const { user } = useAuth();
 
   return (
     <div className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white">
@@ -75,7 +78,11 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
           )}
 
           {comments.map((comment: CommentModel) => (
-            <EventComment key={comment.id} comment={comment} />
+            <EventComment
+              isMe={user?.username === comment.user.username}
+              key={comment.id}
+              comment={comment}
+            />
           ))}
         </div>
       </div>

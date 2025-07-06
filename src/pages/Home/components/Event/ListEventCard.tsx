@@ -1,32 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
 import EventCard from "./EventCard";
-import eventApi from "../../../../api/event";
 import EmptyState from "../../../../components/shared/EmptyState";
 import ErrorState from "../../../../components/shared/ErrorState";
 import Loader from "../../../../components/shared/Loader";
+import type { Event } from "../../../../types/event";
 
 interface ListEventCardProps {
   searchQuery: string;
   selectedCategory: string;
   openModal: () => void;
+  events: Event[] | undefined;
+  isLoading: boolean;
+  refetch: () => void;
+  error: Error | null;
 }
 
 const ListEventCard = ({
   searchQuery,
   selectedCategory,
   openModal,
+  error,
+  events,
+  isLoading,
+  refetch,
 }: ListEventCardProps) => {
-  const {
-    data: events,
-    isLoading,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["events"],
-    queryFn: eventApi.getAllEventWithUsers,
-    staleTime: 5 * 60 * 1000,
-  });
-
   const filteredEvents = events?.filter((event) => {
     const matchesSearch = event.title
       .toLowerCase()
@@ -37,10 +33,6 @@ const ListEventCard = ({
 
     return matchesSearch && matchesCategory;
   });
-
-  console.log("data", events);
-  console.log("filteredData", filteredEvents);
-  console.log("selectedCategory", selectedCategory);
 
   if (isLoading) return <Loader />;
 

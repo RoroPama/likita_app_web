@@ -44,6 +44,7 @@ const addComment = async ({
     });
 
     if (!response.ok) {
+      console.log(await response.json());
       throw new Error("Erreur lors de l'ajout du commentaire");
     }
     const jsonDecoded = await response.json();

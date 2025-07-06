@@ -5,10 +5,13 @@ import Header from "./components/Header";
 import Main from "./components/Main";
 import { useCreateEvent } from "../../hooks/useEvent";
 import type { CreateEventPayload } from "../../types/event";
+import SuccessPopup from "../../components/shared/PopUp";
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [createdEventTitle, setCreatedEventTitle] = useState("");
 
   const createEventMutation = useCreateEvent();
 
@@ -20,7 +23,11 @@ export default function HomePage() {
   ) => {
     createEventMutation.mutate(eventData, {
       onSuccess: () => {
+        setCreatedEventTitle(eventData.title);
         closeModal();
+        setTimeout(() => {
+          setShowSuccessPopup(true);
+        }, 200);
       },
       onError: (error) => {
         alert(
@@ -42,6 +49,11 @@ export default function HomePage() {
     createEventMutation.reset();
   };
 
+  const closeSuccessPopup = () => {
+    setShowSuccessPopup(false);
+    setCreatedEventTitle("");
+  };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
@@ -61,6 +73,12 @@ export default function HomePage() {
             ? (createEventMutation.error as Error).message
             : null
         }
+      />
+
+      <SuccessPopup
+        isOpen={showSuccessPopup}
+        onClose={closeSuccessPopup}
+        eventTitle={createdEventTitle}
       />
     </div>
   );
