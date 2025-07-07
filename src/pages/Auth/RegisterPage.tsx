@@ -37,9 +37,8 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
     }
 
     try {
-      const result = await register({ username, email, password });
+      await register({ username, email, password });
 
-      console.log("Inscription réussie:", result.data);
       navigate("/home");
     } catch {
       console.log("Erreur d'inscription:");
