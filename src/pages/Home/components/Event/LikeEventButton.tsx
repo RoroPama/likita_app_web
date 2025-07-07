@@ -1,5 +1,6 @@
 import React from "react";
 import { useLike } from "../../../../hooks/useLike";
+import { Heart } from "lucide-react";
 
 interface LikeEventButtonProps {
   eventId: string;
@@ -29,7 +30,9 @@ const LikeEventButton: React.FC<LikeEventButtonProps> = ({
       disabled={loading}
       className={"flex items-center gap-1 text-sm  text-gray-500 "}
     >
-      <span>{liked ? "❤️" : "🤍"}</span>
+      <Heart
+        className={`w-5 h-5 ${liked ? "fill-red-500 text-red-500" : ""}`}
+      />{" "}
       <span>{likesCount}</span>
     </button>
   );

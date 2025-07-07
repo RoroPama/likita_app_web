@@ -113,10 +113,7 @@ export const useAuth = () => {
           email: user.email,
         };
 
-        console.log("token1", data.token);
-
         if (data.token) {
-          console.log("token", data.token);
           AuthService.setToken(data.token);
         }
 

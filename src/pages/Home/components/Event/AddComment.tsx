@@ -4,8 +4,9 @@ import { useState } from "react";
 
 interface props {
   eventId: string;
+  onCommentAdded: () => void;
 }
-const AddComment: React.FC<props> = ({ eventId }) => {
+const AddComment: React.FC<props> = ({ eventId, onCommentAdded }) => {
   const [newComment, setNewComment] = useState("");
 
   const addCommentMutation = useAddComment();
@@ -17,6 +18,8 @@ const AddComment: React.FC<props> = ({ eventId }) => {
           eventId,
           commentText: newComment.trim(),
         });
+        onCommentAdded();
+
         setNewComment("");
       } catch (error) {
         console.error("Erreur lors de l'envoi du commentaire:", error);

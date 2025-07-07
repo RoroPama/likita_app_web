@@ -1,4 +1,5 @@
 import React from "react";
+import { Bookmark } from "lucide-react";
 import { useSave } from "../../../../hooks/useSave";
 
 interface SaveEventButtonProps {
@@ -25,14 +26,15 @@ const SaveEventButton: React.FC<SaveEventButtonProps> = ({
     <button
       onClick={toggleSave}
       disabled={loading}
-      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${
-        saved
-          ? "bg-gray-100 text-blue-600"
-          : "text-gray-500 hover:bg-gray-100 hover:text-blue-600"
-      } ${className}`}
+      className={`flex items-center gap-2 px-2 py-1 rounded-md transition-colors ${className}`}
     >
-      <span className="text-lg">{saved ? "📌" : "🔖"}</span>
-      <span className="hidden sm:inline text-sm font-medium">
+      <Bookmark
+        size={20}
+        strokeWidth={2}
+        className={saved ? "text-blue-600" : "text-gray-500"}
+        fill={saved ? "currentColor" : "none"}
+      />
+      <span className="hidden sm:inline text-sm font-medium text-gray-700">
         {saved ? "Sauvegardé" : "Sauvegarder"}
       </span>
     </button>

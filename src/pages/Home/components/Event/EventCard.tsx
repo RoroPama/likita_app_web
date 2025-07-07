@@ -25,7 +25,7 @@ interface EventCardProps {
 const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
-  const commentsCount = event.stats?.comments;
+  const [commentsCount, setCountCount] = useState(event.stats?.comments);
 
   const handleToggleComments = useCallback(() => {
     setCommentsIsOpen((isOpen) => !isOpen);
@@ -198,6 +198,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
           <EventComments
             eventId={event.id}
             onClose={() => setCommentsIsOpen(false)}
+            onCommentsCountChange={setCountCount}
           />
         </div>
       )}

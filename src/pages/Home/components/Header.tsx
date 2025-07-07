@@ -4,6 +4,7 @@ import ProfileIcon from "./ProfileIcon";
 import SearchBar from "./SearchBar";
 import SearchIconButton from "./SearchIconButton";
 import { useNavigate } from "react-router-dom";
+import { Bookmark } from "lucide-react";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -92,7 +93,12 @@ const Header = ({ onSearch }: HeaderProps) => {
             }}
             isVisible={!isMobileSearchActive}
           >
-            🔖
+            <Bookmark
+              size={20}
+              strokeWidth={2}
+              className={"text-gray-600"}
+              fill={"none"}
+            />
           </NavIconButton>
           <div
             className={`transition-all duration-500 ease-out ${

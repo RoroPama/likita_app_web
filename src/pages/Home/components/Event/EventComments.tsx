@@ -1,16 +1,22 @@
 import type { CommentModel } from "../../../../types/comment_model";
-
 import EventComment from "./EventComment";
 import AddComment from "./AddComment";
 import { useComments } from "../../../../hooks/useComment";
 import { useAuth } from "../../../../hooks/useAuth";
+import { MessageCircle, X, Loader2, AlertCircle } from "lucide-react";
+import React from "react";
 
 interface EventCommentsProps {
   eventId: string;
   onClose: () => void;
+  onCommentsCountChange?: (count: number) => void;
 }
 
-const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
+const EventComments: React.FC<EventCommentsProps> = ({
+  eventId,
+  onClose,
+  onCommentsCountChange,
+}) => {
   const {
     data: comments = [],
     isLoading,
@@ -20,22 +26,32 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
 
   const { user } = useAuth();
 
+  React.useEffect(() => {
+    if (onCommentsCountChange && !isLoading) {
+      onCommentsCountChange(comments.length);
+    }
+  }, [comments.length, isLoading, onCommentsCountChange]);
+
+  const handleCommentAdded = () => {
+    refetch();
+  };
+
   return (
     <div className="border-t border-gray-100 bg-gradient-to-b from-gray-50 to-white">
       <div className="px-4 py-3 border-b border-gray-100 bg-white">
         <div className="flex items-center justify-between">
           <h4 className="font-semibold text-gray-800 text-base flex items-center gap-2">
-            <span className="text-blue-500">💬</span>
+            <MessageCircle className="w-5 h-5 text-blue-500" />
             Commentaires ({comments.length})
             {isLoading && (
-              <div className="ml-2 w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <Loader2 className="ml-2 w-4 h-4 text-blue-500 animate-spin" />
             )}
           </h4>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors text-sm"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -45,7 +61,7 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
           {isLoading && comments.length === 0 && (
             <div className="flex items-center justify-center py-8">
               <div className="flex flex-col items-center gap-2">
-                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
                 <span className="text-sm text-gray-500">
                   Chargement des commentaires...
                 </span>
@@ -56,8 +72,9 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
           {isError && (
             <div className="flex items-center justify-center py-8">
               <div className="flex flex-col items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-red-500" />
                 <span className="text-red-500 text-sm">
-                  ❌ Erreur de chargement
+                  Erreur de chargement
                 </span>
                 <button
                   onClick={() => refetch()}
@@ -92,7 +109,7 @@ const EventComments: React.FC<EventCommentsProps> = ({ eventId, onClose }) => {
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-blue-500 flex items-center justify-center text-xs text-white font-semibold flex-shrink-0">
             Moi
           </div>
-          <AddComment eventId={eventId} />
+          <AddComment eventId={eventId} onCommentAdded={handleCommentAdded} />
         </div>
       </div>
     </div>
