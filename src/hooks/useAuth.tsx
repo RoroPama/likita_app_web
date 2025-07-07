@@ -1,16 +1,35 @@
 import type { User } from "../types/user";
+import { apiRequest } from "../utils/api_request";
+import AuthService from "../utils/auth_service";
 import constants from "../utils/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+interface RegisterResponseData {
+  _id?: string;
+  id?: string;
+  username: string;
+  email: string;
+  token?: string;
+}
+
+interface LoginResponseData {
+  user: User;
+  token?: string;
+}
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
 
-  const registerMutation = useMutation({
-    mutationFn: async (userData: {
+  const registerMutation = useMutation<
+    RegisterResponseData,
+    Error,
+    {
       username: string;
       email: string;
       password: string;
-    }) => {
+    }
+  >({
+    mutationFn: async (userData) => {
       if (!userData.username || !userData.email || !userData.password) {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
@@ -18,30 +37,30 @@ export const useAuth = () => {
         throw new Error("Le mot de passe doit contenir au moins 8 caractères");
       }
 
-      const response = await fetch(`${constants.API_BASE_URL}/users`, {
+      const response = await apiRequest(`${constants.API_BASE_URL}/users`, {
         method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
+        body: userData,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
+      if (!response.success) {
         throw new Error(
-          errorData.message || "Une erreur s'est produite lors de l'inscription"
+          response.error || "Une erreur s'est produite lors de l'inscription"
         );
       }
-      return response.json();
+      return response.data as RegisterResponseData;
     },
     onSuccess: (data) => {
-      if (data.data) {
+      if (data) {
         const userData: User = {
-          id: data.data._id || data.data.id,
-          username: data.data.username,
-          email: data.data.email,
-        };
+          id: data._id || data.id,
+          username: data.username,
+          email: data.email,
+        } as User;
+
+        if (data.token) {
+          AuthService.setToken(data.token);
+        }
+
         queryClient.setQueryData<User | null>(["user"], userData);
       }
     },
@@ -50,8 +69,15 @@ export const useAuth = () => {
     },
   });
 
-  const loginMutation = useMutation({
-    mutationFn: async (userData: { email: string; password: string }) => {
+  const loginMutation = useMutation<
+    LoginResponseData,
+    Error,
+    {
+      email: string;
+      password: string;
+    }
+  >({
+    mutationFn: async (userData) => {
       if (!userData.email || !userData.password) {
         throw new Error("Veuillez remplir tous les champs obligatoires");
       }
@@ -59,31 +85,40 @@ export const useAuth = () => {
         throw new Error("Le mot de passe doit contenir au moins 8 caractères");
       }
 
-      const response = await fetch(`${constants.API_BASE_URL}/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      });
+      const response = await apiRequest(
+        `${constants.API_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          body: userData,
+        }
+      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
+      if (!response.success) {
         throw new Error(
-          errorData.message || "Une erreur s'est produite lors de la connexion"
+          response.error || "Une erreur s'est produite lors de la connexion"
         );
       }
-      return response.json();
+
+      const data = response.data as LoginResponseData;
+      return data;
     },
     onSuccess: (data) => {
-      const user: User | undefined = data.data?.user;
+      console.log("token2", data.token);
+
+      const user = data?.user;
       if (user) {
         const userData: User = {
           id: user.id,
           username: user.username,
           email: user.email,
         };
+
+        console.log("token1", data.token);
+
+        if (data.token) {
+          console.log("token", data.token);
+          AuthService.setToken(data.token);
+        }
 
         queryClient.setQueryData<User | null>(["user"], userData);
       }
@@ -104,32 +139,40 @@ export const useAuth = () => {
     queryKey: ["user"],
     queryFn: async () => {
       try {
-        const response = await fetch(
-          `${constants.API_BASE_URL}/auth/checkAuth`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const token = AuthService.getToken();
 
-        if (!response.ok) {
+        if (!token) {
           queryClient.setQueryData(["user"], null);
           return null;
         }
 
-        const jsonDecoded = await response.json();
+        const response = await apiRequest(
+          `${constants.API_BASE_URL}/auth/checkAuth`,
+          {
+            method: "GET",
+            insertToken: true,
+          }
+        );
 
-        if (jsonDecoded.data?.user) {
+        if (!response.success) {
+          AuthService.removeToken();
+          queryClient.setQueryData(["user"], null);
+          return null;
+        }
+
+        if ((response.data as { user?: User })?.user) {
+          const userObj = (response.data as { user: User }).user;
           const userData: User = {
-            id: jsonDecoded.data.user.id,
-            username: jsonDecoded.data.user.username,
-            email: jsonDecoded.data.user.email,
+            id: userObj.id,
+            username: userObj.username,
+            email: userObj.email,
           };
           return userData;
         }
 
         return null;
       } catch (error) {
+        AuthService.removeToken();
         queryClient.setQueryData(["user"], null);
         throw error;
       }
@@ -140,6 +183,7 @@ export const useAuth = () => {
   });
 
   const logout = () => {
+    AuthService.removeToken();
     queryClient.setQueryData(["user"], null);
     queryClient.removeQueries({ queryKey: ["user"] });
   };

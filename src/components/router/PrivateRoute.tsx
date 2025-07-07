@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import Loader from "../shared/Loader";
+import { useAuth } from "../../hooks/useAuth";
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,

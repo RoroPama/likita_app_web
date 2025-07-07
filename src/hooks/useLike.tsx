@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
+import { apiRequest } from "../utils/api_request";
 import constants from "../utils/constants";
 
 interface UseLikeOptions {
@@ -29,32 +30,25 @@ export const useLike = ({
     );
 
     try {
-      const response = await fetch(
+      const response = await apiRequest(
         `${constants.API_BASE_URL}/events/${eventId}/like`,
         {
           method: "PATCH",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          insertToken: true,
         }
       );
 
-      if (!response.ok) {
+      if (!response.success) {
         setIsLiked(currentIsLiked);
         setLikesCount(currentLikesCount);
-
-        const errorData = await response.json();
-        console.error("Erreur lors du like :", errorData);
+        console.error("Erreur lors du like:", response.error);
       } else {
-        const responseData = await response.json();
-        console.log("Like successful:", responseData);
+        console.log("Like successful:", response.data);
       }
     } catch (error) {
       setIsLiked(currentIsLiked);
       setLikesCount(currentLikesCount);
-
-      console.error("Erreur réseau lors du like :", error);
+      console.error("Erreur lors du like:", error);
     } finally {
       setLoading(false);
     }

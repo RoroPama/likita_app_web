@@ -3,7 +3,6 @@ import { AbregUserName } from "../../../utils/fonction";
 
 const ProfileIcon = () => {
   const { user, isLoading } = useAuth();
-  console.log("dataProfile", user);
   return (
     <div
       className="text-sm px-2 py-1 sm:text-base sm:px-3 sm:py-2 lg:text-lg lg:px-4 lg:py-2

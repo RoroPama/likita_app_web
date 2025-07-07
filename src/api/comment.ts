@@ -1,24 +1,28 @@
 import type { CommentModel } from "../types/comment_model";
+import { apiRequest } from "../utils/api_request";
 import constants from "../utils/constants";
 
 const eventUrl = `${constants.API_BASE_URL}/events`;
+
 const getCommentsByEventId = async (
   eventId: string
 ): Promise<CommentModel[]> => {
   try {
-    const response = await fetch(`${eventUrl}/${eventId}/comments`, {
-      credentials: "include",
-    });
+    const response = await apiRequest<{ comments: CommentModel[] }>(
+      `${eventUrl}/${eventId}/comments`,
+      {
+        insertToken: true,
+      }
+    );
 
-    if (!response.ok) {
-      throw new Error("Erreur lors du chargement des commentaires");
+    if (!response.success) {
+      throw new Error(
+        response.error || "Erreur lors du chargement des commentaires"
+      );
     }
-    const jsonDecoded = await response.json();
 
-    console.log(jsonDecoded);
-    const comments: CommentModel[] = jsonDecoded.comments;
-
-    return comments;
+    console.log(response.data);
+    return response.data?.comments || [];
   } catch (e) {
     console.error("Erreur dans getCommentsByEventId :", e);
     throw e;
@@ -33,23 +37,23 @@ const addComment = async ({
   commentText: string;
 }): Promise<CommentModel> => {
   try {
-    const response = await fetch(`${eventUrl}/${eventId}/comments`, {
-      method: "POST",
-      credentials: "include",
+    const response = await apiRequest<{ comment: CommentModel }>(
+      `${eventUrl}/${eventId}/comments`,
+      {
+        method: "POST",
+        insertToken: true,
+        body: { text: commentText },
+      }
+    );
 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ text: commentText }),
-    });
-
-    if (!response.ok) {
-      console.log(await response.json());
-      throw new Error("Erreur lors de l'ajout du commentaire");
+    if (!response.success) {
+      console.log(response.error);
+      throw new Error(
+        response.error || "Erreur lors de l'ajout du commentaire"
+      );
     }
-    const jsonDecoded = await response.json();
-    const addedComment: CommentModel = jsonDecoded.comment;
-    return addedComment;
+
+    return response.data!.comment;
   } catch (e) {
     console.error("Erreur dans addComment :", e);
     throw e;
@@ -58,13 +62,15 @@ const addComment = async ({
 
 const deleteComment = async (commentId: string): Promise<void> => {
   try {
-    const response = await fetch(`${eventUrl}/comments/${commentId}`, {
+    const response = await apiRequest(`${eventUrl}/comments/${commentId}`, {
       method: "DELETE",
-      credentials: "include",
+      insertToken: true,
     });
 
-    if (!response.ok) {
-      throw new Error("Erreur lors de la suppression du commentaire");
+    if (!response.success) {
+      throw new Error(
+        response.error || "Erreur lors de la suppression du commentaire"
+      );
     }
   } catch (e) {
     console.error("Erreur dans deleteComment :", e);

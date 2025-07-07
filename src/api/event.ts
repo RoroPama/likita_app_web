@@ -1,18 +1,20 @@
 import type { CreateEventPayload, Event } from "../types/event";
+import { apiRequest } from "../utils/api_request";
 import constants from "../utils/constants";
 
 const eventApiUrl = `${constants.API_BASE_URL}/events`;
+
 const getAllEvent = async (): Promise<Event[]> => {
   try {
-    const response = await fetch(eventApiUrl, {
-      credentials: "include",
+    const response = await apiRequest<{ events: Event[] }>(eventApiUrl, {
+      insertToken: true,
     });
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+
+    if (!response.success) {
+      throw new Error(response.error || `Erreur HTTP: ${response.status}`);
     }
-    const jsonDecoded = await response.json();
-    const allEvents: Event[] = jsonDecoded.events;
-    console.log("allEvents", allEvents);
+
+    const allEvents = response.data?.events || [];
     return allEvents;
   } catch (e) {
     if (e instanceof Error) {
@@ -26,17 +28,18 @@ const getAllEvent = async (): Promise<Event[]> => {
 
 const getAllEventWithUsers = async (): Promise<Event[]> => {
   try {
-    const response = await fetch(`${eventApiUrl}/with-users`, {
-      credentials: "include",
-    });
-    if (!response.ok) {
-      const jsonDecoded = await response.json();
+    const response = await apiRequest<{ events: Event[] }>(
+      `${eventApiUrl}/with-users`,
+      {
+        insertToken: true,
+      }
+    );
 
-      throw new Error(`Erreur HTTP: ${jsonDecoded.message}  `);
+    if (!response.success) {
+      throw new Error(response.error || `Erreur HTTP: ${response.status}`);
     }
-    const jsonDecoded = await response.json();
-    const allEvents: Event[] = jsonDecoded.events;
-    console.log("allEvents", allEvents);
+
+    const allEvents = response.data?.events || [];
     return allEvents;
   } catch (e) {
     if (e instanceof Error) {
@@ -48,23 +51,20 @@ const getAllEventWithUsers = async (): Promise<Event[]> => {
   }
 };
 
-const createEvent = async (newEvent: CreateEventPayload) => {
+const createEvent = async (newEvent: CreateEventPayload): Promise<Event> => {
   try {
     console.log(newEvent);
-    const response = await fetch(eventApiUrl, {
-      credentials: "include",
+    const response = await apiRequest<{ event: Event }>(eventApiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newEvent),
+      insertToken: true,
+      body: newEvent,
     });
 
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+    if (!response.success) {
+      throw new Error(response.error || `Erreur HTTP: ${response.status}`);
     }
-    const jsonDecoded = await response.json();
-    const record: Event = jsonDecoded.event;
+
+    const record = response.data!.event;
     console.log(record);
     return record;
   } catch (e) {

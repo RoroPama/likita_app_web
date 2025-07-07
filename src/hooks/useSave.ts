@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import constants from "../utils/constants";
+import { apiRequest } from "../utils/api_request";
 
 interface UseSaveOptions {
   eventId: string;
@@ -20,28 +21,23 @@ export const useSave = ({
     setIsSaved(!currentIsSaved);
 
     try {
-      const response = await fetch(
+      const response = await apiRequest(
         `${constants.API_BASE_URL}/events/${eventId}/save`,
         {
           method: "PATCH",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          insertToken: true,
         }
       );
 
-      if (!response.ok) {
+      if (!response.success) {
         setIsSaved(currentIsSaved);
-        const errorData = await response.json();
-        console.error("Erreur lors de l'enregistrement:", errorData);
+        console.error("Erreur lors de l'enregistrement:", response.error);
       } else {
-        const responseData = await response.json();
-        console.log("Enregistrement réussi:", responseData);
+        console.log("Enregistrement réussi:", response.data);
       }
     } catch (error) {
       setIsSaved(currentIsSaved);
-      console.error("Erreur réseau lors de l'enregistrement:", error);
+      console.error("Erreur lors de l'enregistrement:", error);
     } finally {
       setLoading(false);
     }
