@@ -9,8 +9,8 @@ export default function AuthLayout() {
   const isLogin = location.pathname === "/login";
 
   return (
-    <div className="min-h-screen sm:h-screen w-screen bg-gradient-custom flex items-center justify-center px-4">
-      <div className="   sm:h-[90%] w-[85%] sm:w-[70%] bg-white rounded-3xl flex flex-col sm:flex-row overflow-hidden shadow-2xl my-4">
+    <div className="min-h-screen sm:h-screen w-screen bg-white flex items-center justify-center px-4">
+      <div className="   sm:h-[90%] w-[95%] sm:w-[70%] bg-white rounded-3xl flex flex-col sm:flex-row overflow-hidden shadow-2xl my-4">
         <div className=" relative h-full sm:h-full w-full sm:w-1/2 bg-gradient-blue-90 rounded-t-3xl sm:rounded-l-3xl sm:rounded-tr-none flex flex-col items-center justify-center gap-6  overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full blur-xl animate-pulse"></div>
@@ -43,10 +43,9 @@ export default function AuthLayout() {
             </svg>
           </div>
 
-          {/* Contenu principal */}
           <div className="relative z-10 text-center">
             <div className="mb-4">
-              <h1 className="text-5xl sm:text-6xl tracking-tighter text-white font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
+              <h1 className="mt-5 sm:mt-0 text-5xl sm:text-6xl tracking-tighter text-white font-black bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent drop-shadow-lg animate-fade-in">
                 Likita
               </h1>
               <div className="h-1 w-24 bg-gradient-to-r from-pink-400 to-yellow-400 mx-auto mt-2 rounded-full"></div>
