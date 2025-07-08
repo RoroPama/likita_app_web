@@ -4,15 +4,7 @@ import AuthService from "../utils/auth_service";
 import constants from "../utils/constants";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-interface RegisterResponseData {
-  _id?: string;
-  id?: string;
-  username: string;
-  email: string;
-  token?: string;
-}
-
-interface LoginResponseData {
+interface AuthResponseData {
   user: User;
   token?: string;
 }
@@ -21,7 +13,7 @@ export const useAuth = () => {
   const queryClient = useQueryClient();
 
   const registerMutation = useMutation<
-    RegisterResponseData,
+    AuthResponseData,
     Error,
     {
       username: string;
@@ -47,21 +39,24 @@ export const useAuth = () => {
           response.error || "Une erreur s'est produite lors de l'inscription"
         );
       }
-      return response.data as RegisterResponseData;
+      return response.data as AuthResponseData;
     },
     onSuccess: (data) => {
       if (data) {
-        const userData: User = {
-          id: data._id || data.id,
-          username: data.username,
-          email: data.email,
-        } as User;
+        const user = data?.user;
+        if (user) {
+          const userData: User = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+          };
 
-        if (data.token) {
-          AuthService.setToken(data.token);
+          if (data.token) {
+            AuthService.setToken(data.token);
+          }
+
+          queryClient.setQueryData<User | null>(["user"], userData);
         }
-
-        queryClient.setQueryData<User | null>(["user"], userData);
       }
     },
     onError: (error) => {
@@ -70,7 +65,7 @@ export const useAuth = () => {
   });
 
   const loginMutation = useMutation<
-    LoginResponseData,
+    AuthResponseData,
     Error,
     {
       email: string;
@@ -99,7 +94,7 @@ export const useAuth = () => {
         );
       }
 
-      const data = response.data as LoginResponseData;
+      const data = response.data as AuthResponseData;
       return data;
     },
     onSuccess: (data) => {
