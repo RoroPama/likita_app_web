@@ -68,7 +68,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
   const timeAgo = getTimeAgo(createdAt);
 
   return (
-    <div className="bg-white w-full max-w-4xl mx-auto mb-8 ms:rounded-2xl border border-gray-200 shadow-sm  overflow-hidden">
+    <div className="bg-white w-full max-w-4xl mx-auto mb-8 rounded-none sm:rounded-2xl border border-gray-200 shadow-sm  overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <EventCardProfile urlProfile="" username={event.organizer.username} />
