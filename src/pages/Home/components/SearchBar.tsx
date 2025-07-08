@@ -20,6 +20,9 @@ const SearchBar = ({
   };
 
   const handleBlur = () => {
+    setSearchQuery("");
+    onSearch("");
+
     if (isMobileSearch && onMobileBlur) {
       onMobileBlur();
     }
@@ -27,7 +30,7 @@ const SearchBar = ({
 
   if (isMobileSearch) {
     return (
-      <div className="   mx-2 animate-[slideInRight_0.4s_ease-out_forwards]">
+      <div className="mx-2 animate-[slideInRight_0.4s_ease-out_forwards]">
         <div className="relative">
           <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 flex items-center justify-center w-5 h-5">
             🔍
@@ -58,6 +61,7 @@ const SearchBar = ({
           className="w-full rounded-2xl py-2 pl-10 pr-4 outline-none border border-gray-200 placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all duration-200"
           value={searchQuery}
           onChange={handleChange}
+          onBlur={handleBlur}
         />
       </div>
     </div>
