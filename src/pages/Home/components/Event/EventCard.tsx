@@ -62,12 +62,10 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
     }
   }, []);
 
-  // Fonction pour formater la date et l'heure de façon professionnelle
   const formatEventDateTime = useCallback((dateString: string) => {
     try {
       const eventDate = new Date(dateString);
 
-      // Vérifier si la date est valide
       if (isNaN(eventDate.getTime())) {
         return { date: dateString, time: null, weekday: null };
       }
@@ -77,19 +75,20 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
         year: "numeric",
         month: "long",
         day: "numeric",
-        timeZone: "Europe/Paris",
+        timeZone: "Africa/Brazzaville",
       };
 
       const timeOptions: Intl.DateTimeFormatOptions = {
         hour: "2-digit",
         minute: "2-digit",
-        timeZone: "Europe/Paris",
+        timeZone: "Africa/Brazzaville",
       };
 
       const formattedDate = eventDate.toLocaleDateString("fr-FR", options);
       const formattedTime = eventDate.toLocaleTimeString("fr-FR", timeOptions);
       const weekday = eventDate.toLocaleDateString("fr-FR", {
         weekday: "long",
+        timeZone: "Africa/Brazzaville",
       });
 
       return {
