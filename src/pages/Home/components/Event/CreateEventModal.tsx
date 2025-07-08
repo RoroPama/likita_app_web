@@ -67,6 +67,17 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     "Autre",
   ];
 
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   const resetForm = () => {
     setFormData(initialFormData);
     setImagePreview("");
@@ -86,6 +97,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
   ) => {
     const { name, value } = e.target;
     setFormError(null);
+
     if (["date", "platform"].includes(name)) {
       setFormData((prev) => ({
         ...prev,
@@ -131,6 +143,16 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     }
   };
 
+  const validateDateTime = () => {
+    const { date } = formData.details;
+    if (!date) return false;
+
+    const selectedDateTime = new Date(date);
+    const now = new Date();
+
+    return selectedDateTime > now;
+  };
+
   const handleSubmit = () => {
     if (
       !formData.title ||
@@ -142,6 +164,13 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
       !formData.details.platform
     ) {
       setFormError("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    if (!validateDateTime()) {
+      setFormError(
+        "La date et l'heure de l'événement doivent être dans le futur."
+      );
       return;
     }
 
@@ -171,6 +200,8 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
   };
 
   if (!isOpen) return null;
+
+  const currentDateTime = getCurrentDateTime();
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -267,14 +298,15 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
                   className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2"
                 >
                   <Calendar className="w-4 h-4" />
-                  Date *
+                  Date et heure *
                 </label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   id="date"
                   name="date"
                   value={formData.details.date}
                   onChange={handleInputChange}
+                  min={currentDateTime}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
                   disabled={isLoading}
                 />
@@ -294,33 +326,31 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
                   name="platform"
                   value={formData.details.platform}
                   onChange={handleInputChange}
-                  placeholder="Ex: Zoom, Google Meet"
+                  placeholder="Ex: Zoom, Google Meet, Teams"
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
                   disabled={isLoading}
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="liveUrl"
-                  className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2"
-                >
-                  <Link className="w-4 h-4" />
-                  Lien de l'évenement *
-                </label>
-                <input
-                  type="url"
-                  id="liveUrl"
-                  name="liveUrl"
-                  value={formData.liveUrl}
-                  onChange={handleInputChange}
-                  placeholder="https://exemple.com/inscription"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                  disabled={isLoading}
-                />
-              </div>
+            <div>
+              <label
+                htmlFor="liveUrl"
+                className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2"
+              >
+                <Link className="w-4 h-4" />
+                Lien de l'événement *
+              </label>
+              <input
+                type="url"
+                id="liveUrl"
+                name="liveUrl"
+                value={formData.liveUrl}
+                onChange={handleInputChange}
+                placeholder="https://exemple.com/inscription"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                disabled={isLoading}
+              />
             </div>
 
             <div>

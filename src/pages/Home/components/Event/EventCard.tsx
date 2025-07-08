@@ -11,6 +11,7 @@ import {
   Tag,
   MessageCircle,
   Link as LinkIcon,
+  Clock,
 } from "lucide-react";
 
 interface EventCardProps {
@@ -61,18 +62,61 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
     }
   }, []);
 
+  // Fonction pour formater la date et l'heure de façon professionnelle
+  const formatEventDateTime = useCallback((dateString: string) => {
+    try {
+      const eventDate = new Date(dateString);
+
+      // Vérifier si la date est valide
+      if (isNaN(eventDate.getTime())) {
+        return { date: dateString, time: null, weekday: null };
+      }
+
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timeZone: "Europe/Paris",
+      };
+
+      const timeOptions: Intl.DateTimeFormatOptions = {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Europe/Paris",
+      };
+
+      const formattedDate = eventDate.toLocaleDateString("fr-FR", options);
+      const formattedTime = eventDate.toLocaleTimeString("fr-FR", timeOptions);
+      const weekday = eventDate.toLocaleDateString("fr-FR", {
+        weekday: "long",
+      });
+
+      return {
+        date: formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1),
+        time: formattedTime,
+        weekday: weekday.charAt(0).toUpperCase() + weekday.slice(1),
+        fullDate: eventDate,
+      };
+    } catch {
+      return { date: dateString, time: null, weekday: null };
+    }
+  }, []);
+
   const statusConfig = useMemo(
     () => getStatusConfig(event.status),
     [event.status, getStatusConfig]
   );
+
   const createdAt = new Date(event.createdAt!);
   const timeAgo = getTimeAgo(createdAt);
+  const eventDateTime = formatEventDateTime(event.details.date);
 
   const shouldShowReadMore =
     event.description && event.description.length > 200;
 
   return (
-    <div className="bg-white w-full max-w-4xl mx-auto mb-8 rounded-none sm:rounded-2xl border border-gray-200 shadow-sm  overflow-hidden">
+    <div className="bg-white w-full max-w-4xl mx-auto mb-8 rounded-none sm:rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <EventCardProfile urlProfile="" username={event.organizer.username} />
@@ -110,24 +154,38 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
-            <div className="bg-blue-100 p-2 rounded-md">
+          {/* Date et heure améliorées */}
+          <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4">
+            <div className="bg-blue-100 p-2 rounded-md flex-shrink-0">
               <Calendar className="text-blue-600 w-5 h-5" />
             </div>
-            <div>
-              <p className="text-xs text-gray-500 font-medium">Date</p>
-              <p className="text-sm font-semibold text-gray-900">
-                {event.details.date}
+            <div className="flex-1">
+              <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                Date & Heure
               </p>
+              <p className="text-sm font-semibold text-gray-900 leading-tight">
+                {eventDateTime.date}
+              </p>
+              {eventDateTime.time && (
+                <div className="flex items-center gap-1 mt-1">
+                  <Clock className="w-3 h-3 text-gray-500" />
+                  <span className="text-xs text-gray-600 font-medium">
+                    {eventDateTime.time}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
+
           {event.details.platform && (
-            <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-3">
+            <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4">
               <div className="bg-purple-100 p-2 rounded-md">
                 <Laptop className="text-purple-600 w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-gray-500 font-medium">Plateforme</p>
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">
+                  Plateforme
+                </p>
                 <p className="text-sm font-semibold text-gray-900">
                   {event.details.platform}
                 </p>
@@ -177,8 +235,8 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
                   : "text-gray-500 hover:bg-gray-100 hover:text-blue-600"
               }`}
             >
-              <MessageCircle className="w-4 h-4" />
-              <span className="  sm:inline">{commentsCount}</span>
+              <MessageCircle className="w-5 h-5" />
+              <span className="sm:inline">{commentsCount}</span>
             </button>
             <SaveEventButton
               eventId={event.id}
@@ -207,7 +265,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
           rel="noopener noreferrer"
           className="flex justify-center items-center gap-2 w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl font-semibold text-sm hover:from-blue-600 hover:to-blue-700 transition transform hover:scale-105 shadow-md"
         >
-          🚀 <span className="  sm:inline">Accéder à l'événement</span>
+          🚀 <span className="sm:inline">Accéder à l'événement</span>
         </a>
       </div>
 
