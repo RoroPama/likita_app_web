@@ -5,6 +5,7 @@ import SearchBar from "./SearchBar";
 import SearchIconButton from "./SearchIconButton";
 import { useNavigate } from "react-router-dom";
 import { Bookmark } from "lucide-react";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -24,6 +25,8 @@ const Header = ({ onSearch }: HeaderProps) => {
   };
 
   const navigate = useNavigate();
+
+  const { logout } = useAuth();
 
   return (
     <nav className="z-10 fixed w-full h-20 shadow-md flex items-center justify-between px-4 sm:px-8 lg:px-16 bg-white overflow-hidden">
@@ -81,6 +84,7 @@ const Header = ({ onSearch }: HeaderProps) => {
           </NavIconButton>
           <NavIconButton
             action={() => {
+              logout();
               alert("Page pas encore implémentée");
             }}
             isVisible={!isMobileSearchActive}
