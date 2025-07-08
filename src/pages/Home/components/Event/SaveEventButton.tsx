@@ -34,7 +34,7 @@ const SaveEventButton: React.FC<SaveEventButtonProps> = ({
         className={saved ? "text-blue-600" : "text-gray-500"}
         fill={saved ? "currentColor" : "none"}
       />
-      <span className="hidden sm:inline text-sm font-medium text-gray-700">
+      <span className="hidden sm:inline text-sm font-medium text-gray-500">
         {saved ? "Sauvegardé" : "Sauvegarder"}
       </span>
     </button>

@@ -26,6 +26,7 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
   const [commentsIsOpen, setCommentsIsOpen] = useState(false);
   const [isLinkCopied, setIsLinkCopied] = useState(false);
   const [commentsCount, setCountCount] = useState(event.stats?.comments);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const handleToggleComments = useCallback(() => {
     setCommentsIsOpen((isOpen) => !isOpen);
@@ -67,6 +68,9 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
   const createdAt = new Date(event.createdAt!);
   const timeAgo = getTimeAgo(createdAt);
 
+  const shouldShowReadMore =
+    event.description && event.description.length > 200;
+
   return (
     <div className="bg-white w-full max-w-4xl mx-auto mb-8 rounded-none sm:rounded-2xl border border-gray-200 shadow-sm  overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
@@ -91,11 +95,11 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
         </div>
       </div>
 
-      <div className="relative w-full h-64 sm:h-80 lg:h-96 overflow-hidden">
+      <div className="relative w-full overflow-hidden">
         <img
           src={event.imageUrl}
           alt={event.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
@@ -132,9 +136,23 @@ const EventCard: React.FC<EventCardProps> = ({ event, onComment }) => {
           )}
         </div>
 
-        <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-          {event.description}
-        </p>
+        <div className="mb-4">
+          <p
+            className={`text-gray-600 text-sm leading-relaxed ${
+              !isDescriptionExpanded && shouldShowReadMore ? "line-clamp-3" : ""
+            }`}
+          >
+            {event.description}
+          </p>
+          {shouldShowReadMore && (
+            <button
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              className="text-blue-600 text-sm font-medium hover:text-blue-700 mt-2"
+            >
+              {isDescriptionExpanded ? "Réduire" : "Lire plus"}
+            </button>
+          )}
+        </div>
 
         <div className="flex items-center gap-2 mb-6">
           <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 text-xs font-medium rounded-full">

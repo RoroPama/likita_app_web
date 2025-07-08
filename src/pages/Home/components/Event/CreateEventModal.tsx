@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   X,
   Upload,
@@ -30,9 +30,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
   isLoading,
   error,
 }) => {
-  const [formData, setFormData] = useState<
-    Omit<Event, "id" | "organizer" | "status" | "stats" | "isLiked" | "isSaved">
-  >({
+  const initialFormData = {
     type: "",
     imageUrl: "",
     title: "",
@@ -42,7 +40,15 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     },
     description: "",
     liveUrl: "",
-  });
+  };
+
+  const [formData, setFormData] =
+    useState<
+      Omit<
+        Event,
+        "id" | "organizer" | "status" | "stats" | "isLiked" | "isSaved"
+      >
+    >(initialFormData);
 
   const [imagePreview, setImagePreview] = useState<string>("");
   const [formError, setFormError] = useState<string | null>(null);
@@ -60,6 +66,18 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     "Atelier",
     "Autre",
   ];
+
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setImagePreview("");
+    setFormError(null);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      resetForm();
+    }
+  }, [isOpen]);
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -142,11 +160,14 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
       liveUrl: formData.liveUrl,
     };
 
-    console.log("Nouvel événement créé:", eventDataToCreate);
-
     if (onCreateEvent) {
       onCreateEvent(eventDataToCreate);
     }
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -165,7 +186,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
             </h2>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
             disabled={isLoading}
           >
@@ -361,7 +382,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleClose}
                 className="px-6 py-3 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-medium order-2 sm:order-1"
                 disabled={isLoading}
               >
