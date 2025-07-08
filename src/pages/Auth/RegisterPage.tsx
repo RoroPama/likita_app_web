@@ -5,7 +5,7 @@ import LabelInput from "./components/LabeInput";
 import LoginRegisterLabel from "./components/LoginRegisterLabel";
 import TextButton from "./components/TextButton";
 import { useState } from "react";
-
+//register
 type RegisterPageProps = {
   action: () => void;
 };
