@@ -96,13 +96,9 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ action }) => {
           disabled={isLoading}
         />
         <div className="flex flex-row items-center justify-center gap-1">
-          <TextButton
-            label="Mot de passe oublié ?"
-            Action={() => {
-              alert("Mot de passe oublié");
-            }}
-          />
-          <span className="text-gray-300"> | </span>
+          <label htmlFor="" className="text-sm text-gray-700">
+            Vous avez déjà un compte ?
+          </label>
           <TextButton label="Se connecter" Action={action} />
         </div>
       </div>
